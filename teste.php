@@ -11,6 +11,7 @@ function modeloDocumento($urlArquivoOrigem,$urlArquivoDestino,$arrayCampos) {
      * Lê um arquivo de modelo e insere valores nos campos pré-definidos, gerando um novo documento.
      * Exemplo de utilização: modelo de contratos, inserindo informações como nome da empresa, CNPJ e endereço. 
      * Exemplo de texto que deve conter dentro do arquivo de modelo: [#numerocontrato#]
+     * Exemplo de Array: $arrayCampos[] = array("campo" => "numerocontrato", "valor" => 'XXXXXX');
      * 
      */
     
@@ -66,7 +67,18 @@ function modeloDocumento($urlArquivoOrigem,$urlArquivoDestino,$arrayCampos) {
     
     return $retorno;
     
+}
 
+function modeloDocumentoProcuraCampos($urlArquivoOrigem) { // Varre modelo para encontrar padrão de campos
+    // Variáveis
+    $urlArquivoOrigem;
+    // Consulta conteudo do arquivo
+    $fp=fopen($urlArquivoOrigem,'r');
+    $output=fread($fp,filesize($urlArquivoOrigem));
+    fclose($fp);
+    // Procura campo com [# #]
+    preg_match_all("/\[\#.*?\#\]/", $output, $encontrou);
+    return $encontrou;
 }
 
 // Campos a serem alterados
@@ -79,9 +91,13 @@ $retorno = modeloDocumento('teste.rtf','teste2.rtf',$arrayCampos);
 
 // Exibe a saída
 if ($retorno['status']) {
-    echo('Seu arquivo está pronto: <a href="'.$retorno['valor'].'">[download]</a>');
+    echo('Seu arquivo está pronto: <a href="'.$retorno['valor'].'">[download]</a><br />');
 } else {
-    echo('<b>Erro(s) encontrado(s):</b><br />'.$retorno['valor'].'<b>Arquivo não gerado!</b>');
+    echo('<b>Erro(s) encontrado(s):</b><br />'.$retorno['valor'].'<b>Arquivo não gerado!</b><br />');
 }
+
+
+$encontrou = modeloDocumentoProcuraCampos('teste.rtf');
+print_r($encontrou);
 
 ?>
