@@ -41,7 +41,7 @@ function modeloDocumento($urlArquivoOrigem,$urlArquivoDestino,$arrayCampos) {
             if (!isset($dados['valor'])) { $retorno['status'] = false; $retorno['valor'] .= 'Valor não informado corretamente dentro do Array.<br />'; }
             if (!isset($dados['valor']) AND trim($dados['campo']) == '') { $retorno['status'] = false; $retorno['valor'] .= 'Nome do campo não informado corretamente dentro do Array.<br />'; }
             if ($retorno['status'] == true) {
-                if( strpos(file_get_contents($urlArquivoOrigem),$tagL.$dados['campo'].$tagR) == false) {
+                if( strpos($output,$tagL.$dados['campo'].$tagR) == false) {
                     $retorno['status'] = false;
                     $retorno['valor'] .= $tagL.$dados['campo'].$tagR." NÃO existe no documento.<br />";
                 }
